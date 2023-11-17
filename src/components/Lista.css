@@ -1,0 +1,82 @@
+/* ProductList.css */
+
+/* Media Query for mobile devices */
+@media (max-width: 700px) {
+  body {
+    font-family: "Arial", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+
+  label {
+    margin-bottom: 5px;
+  }
+
+  select {
+    padding: 8px; /* Ajusta el espaciado interno */
+    font-size: 16px; /* Tamaño de fuente */
+    border: 1px solid #ccc; /* Borde del select */
+    border-radius: 4px; /* Bordes redondeados */
+    background-color: #fff; /* Color de fondo */
+    color: #333; /* Color del texto */
+  }
+
+  input {
+    width: 90%;
+    margin-bottom: 10px;
+    padding: 8px;
+    font-size: 16px;
+  }
+
+  textarea {
+    width: 90%;
+    margin-bottom: 10px;
+    padding: 8px;
+    font-size: 16px;
+  }
+
+  button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  button:hover {
+    background-color: #45a049;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 2px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #4caf50;
+    color: white;
+  }
+
+  .container {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente los elementos */
+    /*align-items: center; /* Centra verticalmente los elementos si es necesario */
+    padding: 5px;
+  }
+}

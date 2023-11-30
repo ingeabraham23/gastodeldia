@@ -75,8 +75,65 @@
 
   .container {
     display: flex;
-    justify-content: center; /* Centra horizontalmente los elementos */
-    /*align-items: center; /* Centra verticalmente los elementos si es necesario */
+    flex-direction: column;
+    align-items: center;
     padding: 5px;
+  }
+
+  .contenedor-dividir {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-items: baseline;
+    padding: 10px;
+  }
+
+  .input-numero-personas {
+    width: 20%;
+  }
+
+  .input-restar {
+    width: 20%;
+  }
+
+  .boton-cargar {
+    background-color: rgb(71, 163, 18);
+    border-radius: 5px;
+    margin-top: 5px;
+  }
+
+  .boton-cargar:hover {
+    background-color: grey;
+  }
+
+  .boton-calcular {
+    background-color: #11a9c4;
+    border-radius: 5px;
+    margin-top: 5px;
+  }
+
+  .boton-calcular:hover {
+    background-color: grey;
+  }
+
+  .boton-capturar {
+    background-color: #7c11c4;
+    border-radius: 5px;
+    margin-top: 5px;
+  }
+
+  .boton-capturar:hover {
+    background-color: grey;
+  }
+
+  .boton-guardar {
+    background-color: #3bc411;
+    border-radius: 5px;
+    margin-top: 5px;
+  }
+
+  .boton-guardar:hover {
+    background-color: grey;
   }
 }

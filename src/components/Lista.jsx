@@ -1,8 +1,19 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect, useRef } from "react";
 import html2canvas from "html2canvas";
+import {
+  faCalculator,
+  faCamera,
+  faCartPlus,
+  faFileArrowDown,
+  faSdCard,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Lista.css";
 import db from "../db";
+
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProductList = () => {
   const [tableTitle, setTableTitle] = useState("");
@@ -15,10 +26,18 @@ const ProductList = () => {
   });
   const [records, setRecords] = useState([]);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const [numPersons, setNumPersons] = useState("");
+  const [totalDivided, setTotalDivided] = useState(0);
+  const [showDividerRow, setShowDividerRow] = useState(false);
 
   useEffect(() => {
     loadRecordsFromDB();
   }, []);
+
+  const handleNumPersonsChange = (e) => {
+    const value = e.target.value;
+    setNumPersons(value === "" ? value : Math.max(parseInt(value, 10), 1));
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -46,8 +65,9 @@ const ProductList = () => {
         precioUnitario: "",
         total: "",
       });
+      toast.success("Producto Añadido.");
     } else {
-      alert("Por favor, complete todos los campos.");
+      toast.warn("Por favor, complete todos los campos.");
     }
   };
 
@@ -60,6 +80,7 @@ const ProductList = () => {
 
     await db.records.add(record);
     // Recargar registros desde IndexedDB al estado
+    toast.success("Lista Guardada.");
     loadRecordsFromDB();
   };
 
@@ -83,7 +104,7 @@ const ProductList = () => {
     const recordsFromDB = await db.records.toArray();
     setRecords(recordsFromDB);
   };
-  
+
   const tablaRef = useRef(null);
 
   function capturarTabla(tabla) {
@@ -98,6 +119,16 @@ const ProductList = () => {
     });
   }
 
+  const handleCalculateSplit = () => {
+    if (numPersons > 0) {
+      const totalDividedValue = (getTotalSum() / numPersons).toFixed(2);
+      setTotalDivided(totalDividedValue);
+      setShowDividerRow(true);
+    } else {
+      toast.warn("Ingrese un número válido de personas.");
+    }
+  };
+
   return (
     <div>
       <br></br>
@@ -109,7 +140,7 @@ const ProductList = () => {
             )
           }
         >
-          <option value="">Seleccionar Registro</option>
+          <option value="">Seleccionar Lista</option>
           {records.map((record) => (
             <option key={record.id} value={record.title}>
               {record.title}
@@ -118,10 +149,13 @@ const ProductList = () => {
         </select>
       </div>
       <div className="container">
-        <button onClick={handleLoadRecord}>Cargar Registro</button>
+        <button onClick={handleLoadRecord} className="boton-cargar" >
+          <FontAwesomeIcon icon={faFileArrowDown}></FontAwesomeIcon> Cargar
+          Lista
+        </button>
       </div>
       <hr></hr>
-      <div>
+      <div className="container">
         <input
           type="text"
           placeholder="Título"
@@ -150,14 +184,18 @@ const ProductList = () => {
           onChange={handleInputChange}
         />
       </div>
-      <div>
-        <button onClick={handleAddProduct}>Agregar Producto</button>
+      <div className="container">
+        <button onClick={handleAddProduct} className="boton-cargar" >
+          <FontAwesomeIcon icon={faCartPlus}></FontAwesomeIcon> Agregar Producto
+        </button>
       </div>
-      
+      <hr></hr>
       <table ref={tablaRef}>
         <thead>
           <tr>
-            <th colSpan={5} style={{textAlign:"center"}}>{tableTitle}</th>
+            <th colSpan={5} style={{ textAlign: "center" }}>
+              {tableTitle}
+            </th>
           </tr>
           <tr>
             <th></th>
@@ -170,8 +208,8 @@ const ProductList = () => {
         <tbody>
           {products.map((product, index) => (
             <tr key={index}>
-                <td> {index + 1}</td>
-              <td>{product.cantidad}</td>
+              <td> {index + 1}</td>
+              <td style={{textAlign:"center"}} >{product.cantidad}</td>
               <td>{product.descripcion}</td>
               <td>$ {product.precioUnitario}.00</td>
               <td>$ {product.total}.00</td>
@@ -182,16 +220,45 @@ const ProductList = () => {
               Total: $ {formatNumberWithCommas(getTotalSum())}.00
             </td>
           </tr>
+          {numPersons > 0 && showDividerRow && (
+            <tr>
+              <td colSpan={5} style={{ textAlign: "right", fontSize: "25px" }}>
+                Entre {numPersons}: $ {formatNumberWithCommas(totalDivided)}
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
-      <div>
-          <button onClick={() => capturarTabla(tablaRef.current)}>
-            Capturar
-          </button>
-        </div>
-      <div className="container">
-        <button onClick={handleSaveRecord}>Guardar Registro</button>
+      <div className="contenedor-dividir">
+        <label>Entre: </label>
+        <input
+          className="input-numero-personas"
+          type="number"
+          value={numPersons}
+          placeholder="Número"
+          onChange={handleNumPersonsChange}
+        />
+        <button
+          className="boton-calcular"
+          onClick={handleCalculateSplit}
+        >
+          <FontAwesomeIcon icon={faCalculator}></FontAwesomeIcon> Calcular
+          División
+        </button>
       </div>
+      <hr></hr>
+      <div className="container">
+        <button onClick={handleSaveRecord} className="boton-guardar" >
+          <FontAwesomeIcon icon={faSdCard}></FontAwesomeIcon> Guardar
+          Lista
+        </button>
+      </div>
+      <div className="container">
+        <button onClick={() => capturarTabla(tablaRef.current)} className="boton-capturar" >
+          <FontAwesomeIcon icon={faCamera}></FontAwesomeIcon> Capturar Lista
+        </button>
+      </div>
+      
     </div>
   );
 };

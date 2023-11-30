@@ -1,0 +1,9 @@
+.boton-eliminar{
+    background-color: red;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.boton-eliminar:hover{
+    background-color: grey;
+}

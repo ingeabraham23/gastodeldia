@@ -32,7 +32,7 @@ const PersonList = () => {
     loadListasFromDB();
   }, []);
 
-  const handleInputChange = (e) => {
+  /* const handleInputChange = (e) => {
     const { name, value } = e.target;
 
     // Actualiza el valor solo si es un número o está vacío
@@ -42,6 +42,11 @@ const PersonList = () => {
       // Permite que el usuario borre el 0
       setInputValues({ ...inputValues, [name]: "" });
     }
+  }; */
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setInputValues({ ...inputValues, [name]: value });
   };
 
   const handleAddPerson = () => {

@@ -6,6 +6,7 @@ import {
   faCamera,
   faCartPlus,
   faFileArrowDown,
+  faRefresh,
   faSdCard,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,6 +15,7 @@ import db from "../db";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import EditarLista from "./EditarLista";
 
 const ProductList = () => {
   const [tableTitle, setTableTitle] = useState("");
@@ -72,6 +74,13 @@ const ProductList = () => {
   };
 
   const handleSaveRecord = async () => {
+    // Verificar si el título de la lista ya existe
+    const existingRecord = records.find(record => record.title === tableTitle);
+    if (existingRecord) {
+      toast.warn("La lista ya existe. Por favor, elige un título diferente o da click en el boton actualizar para actualizar la lista.");
+      return;
+    }
+
     // Guardar registro en IndexedDB
     const record = {
       title: tableTitle,
@@ -82,6 +91,31 @@ const ProductList = () => {
     // Recargar registros desde IndexedDB al estado
     toast.success("Lista Guardada.");
     loadRecordsFromDB();
+  };
+
+  const handleUpdateList = () => {
+    // Verificar si hay un registro seleccionado para actualizar
+    if (selectedRecord) {
+      // Actualizar el registro en IndexedDB con los cambios
+      const updatedRecord = {
+        ...selectedRecord,
+        title: tableTitle,
+        products: products,
+      };
+
+      db.records.update(selectedRecord.id, updatedRecord)
+        .then(() => {
+          toast.success("Lista Actualizada.");
+          // Recargar registros desde IndexedDB al estado
+          loadRecordsFromDB();
+        })
+        .catch((error) => {
+          console.error("Error al actualizar lista:", error);
+          toast.error("Error al actualizar lista. Consulta la consola para más detalles.");
+        });
+    } else {
+      toast.warn("Por favor, selecciona una lista antes de intentar actualizar.");
+    }
   };
 
   const handleLoadRecord = () => {
@@ -247,10 +281,13 @@ const ProductList = () => {
         </button>
       </div>
       <hr></hr>
-      <div className="container">
+      <div className="container-botones">
         <button onClick={handleSaveRecord} className="boton-guardar" >
           <FontAwesomeIcon icon={faSdCard}></FontAwesomeIcon> Guardar
           Lista
+        </button>
+        <button onClick={handleUpdateList} className="boton-actualizar">
+          <FontAwesomeIcon icon={faRefresh}></FontAwesomeIcon> Actualizar Lista
         </button>
       </div>
       <div className="container">
@@ -258,7 +295,7 @@ const ProductList = () => {
           <FontAwesomeIcon icon={faCamera}></FontAwesomeIcon> Capturar Lista
         </button>
       </div>
-      
+      <EditarLista></EditarLista>
     </div>
   );
 };

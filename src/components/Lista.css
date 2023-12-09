@@ -80,6 +80,15 @@
     padding: 5px;
   }
 
+  .container-botones {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 5px;
+    justify-content: space-evenly;
+
+  }
+
   .contenedor-dividir {
     display: flex;
     flex-direction: row;
@@ -129,6 +138,12 @@
 
   .boton-guardar {
     background-color: #3bc411;
+    border-radius: 5px;
+    margin-top: 5px;
+  }
+
+  .boton-actualizar {
+    background-color: #0099ff;
     border-radius: 5px;
     margin-top: 5px;
   }

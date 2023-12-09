@@ -6,6 +6,7 @@ import DeleteRecord from './components/EliminarRegistro'
 import './App.css'
 import PersonList from './components/ListaDePersonas'
 import Navbar from "./components/Navbar";
+import Operaciones from './components/Operaciones';
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
           <Routes>
             <Route path="/" element={<ProductList />} />
             <Route path="/listapersonas" element={<PersonList />} />
+            <Route path="/operaciones" element={<Operaciones />} />
             <Route path="/eliminar" element={<DeleteRecord />} />
           </Routes>
         </div>

@@ -1,0 +1,65 @@
+/* Media Query for mobile devices */
+@media (max-width: 700px) {
+    body {
+      font-family: "Arial", sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+  
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 5px;
+    }
+  
+    .boton-actualizar-operaciones {
+      background-color: #095dfa;
+      border-radius: 5px;
+      margin-top: 5px;
+    }
+  
+    .boton-eliminar-producto {
+      background-color: #fcfcfc;
+      border-radius: 5px;
+      margin-top: 5px;
+      border: 1px solid black;
+    }
+  
+    .boton-actualizar-operaciones:hover {
+      background-color: grey;
+    }
+  
+    .input-precio-unitario {
+      width: 30px;
+    }
+  
+    .input-cantidad {
+      width: 10px;
+    }
+  
+    .select-editar {
+      margin: 10px;
+    }
+
+    .boton-sumar{
+        background-color: #095dfa;
+        border: 1px solid rgb(0, 0, 0);
+        border-radius: 5px;
+    }
+    .boton-restar{
+        background-color: #fa7509;
+        border: 1px solid rgb(0, 0, 0);
+        border-radius: 5px;
+    }
+
+    .div-botones{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+
+  }

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import "./Navbar.css"
 import {
+  faCalculator,
     faClipboardList,
     faDeleteLeft,
     faPeopleGroup,
@@ -10,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const navigationItems = [
   { path: '/', icon: faClipboardList, label: 'Productos' },
   { path: '/listapersonas', icon: faPeopleGroup, label: 'personas' },
+  { path: '/operaciones', icon: faCalculator, label: 'operaciones' },
   { path: '/eliminar', icon: faDeleteLeft, label: 'eliminar' },
 
 ];

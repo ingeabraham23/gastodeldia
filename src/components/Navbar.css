@@ -33,6 +33,10 @@
     color: #fff;
   }
 
+  .nav-label{
+    font-size: 10px;
+  }
+
   .text-small {
     font-size: 10px;
   }

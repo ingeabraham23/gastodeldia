@@ -116,7 +116,10 @@ const PersonList = () => {
   };
 
   const getTotalSum = () => {
-    return persons.reduce((total, person) => total + person.aporte, 0);
+    return persons.reduce((total, person) => {
+      const aporte = parseFloat(person.aporte);
+      return isNaN(aporte) ? total : total + aporte;
+    }, 0);
   };
 
   const formatNumberWithCommas = (number) => {
@@ -234,19 +237,19 @@ const PersonList = () => {
           ))}
           <tr>
             <td colSpan={5} style={{ textAlign: "right", fontSize: "25px" }}>
-              Total: ${formatNumberWithCommas(getTotalSum())}.00
+              Total: $ {formatNumberWithCommas(getTotalSum().toFixed(2))}
             </td>
           </tr>
           {showSubtractRows && (
             <>
               <tr>
                 <td colSpan={5} style={{ textAlign: "right", fontSize: "25px" }}>
-                  Restar: ${formatNumberWithCommas(amountToSubtract)}.00
+                  Restar: $ {formatNumberWithCommas(amountToSubtract)}.00
                 </td>
               </tr>
               <tr>
                 <td colSpan={5} style={{ textAlign: "right", fontSize: "25px" }}>
-                  Nuevo Total: ${formatNumberWithCommas(newTotal)}.00
+                  Nuevo Total: $ {formatNumberWithCommas(newTotal)}.00
                 </td>
               </tr>
             </>

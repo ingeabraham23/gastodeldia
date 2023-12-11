@@ -27,9 +27,12 @@ const EditarPersonas = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    // Verificar si el campo es "aporte" y parsear el valor a un número
+    const parsedValue = name === "aporte" ? parseFloat(value) : value;
+  
     setEditedLista((prevLista) => ({
       ...prevLista,
-      [name]: value,
+      [name]: parsedValue,
     }));
   };
 

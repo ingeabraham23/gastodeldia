@@ -229,7 +229,7 @@ const PersonList = () => {
         </thead>
         <tbody>
           {persons.map((person, index) => (
-            <tr key={index}>
+            <tr key={index} style={{backgroundColor: person.aporte > 0 ? "#AFEB0E" : "white"}}>
               <td> {index + 1}</td>
               <td>{person.nombre}</td>
               <td>${formatNumberWithCommas(person.aporte)}.00</td>

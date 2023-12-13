@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 import db from "../db";
 //import "./EditarLista.css";
+import {toast} from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 const EditarPersonas = () => {
   const [listas, setListas] = useState([]);
@@ -64,7 +66,7 @@ const EditarPersonas = () => {
 
       await db.listas.update(selectedLista.id, editedLista);
       loadListasFromDB();
-      alert("Lista actualizada exitosamente.");
+      toast.success("Lista actualizada exitosamente.");
     }
   };
 

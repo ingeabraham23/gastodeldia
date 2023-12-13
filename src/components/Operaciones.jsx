@@ -238,7 +238,10 @@ const Operaciones = () => {
         </thead>
         <tbody>
           {operaciones.map((operacion, index) => (
-            <tr key={index}>
+            <tr key={index} style={{
+              backgroundColor: operacion.cantidad < 0 ? '#E54040' : 'white',
+              // Agrega otros estilos según sea necesario
+            }}>
               <td>{index + 1}</td>
               <td>{operacion.descripcion}</td>
               <td>${operacion.cantidad}</td>

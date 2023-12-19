@@ -41,23 +41,43 @@ const ProductList = () => {
     setNumPersons(value === "" ? value : Math.max(parseInt(value, 10), 1));
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setInputValues({ ...inputValues, [name]: value });
+  const handleCantidadChange = (e) => {
+    const value = e.target.value;
+
+    // Verificar si el valor ingresado es un número entero antes de actualizar el estado
+
+      setInputValues({ ...inputValues, cantidad: value });
+
+  };
+
+  const handleDescripcionChange = (e) => {
+    const value = e.target.value;
+    setInputValues({ ...inputValues, descripcion: value });
+  };
+
+  const handlePrecioUnitarioChange = (e) => {
+    const value = e.target.value;
+
+    // Verificar si el valor ingresado es un número antes de actualizar el estado
+
+      setInputValues({ ...inputValues, precioUnitario: value });
   };
 
   const handleAddProduct = () => {
-    // Validar que todos los campos estén llenos antes de agregar el producto
+    // Validar que todos los campos estén llenos y sean números antes de agregar el producto
     if (
-      inputValues.cantidad &&
-      inputValues.descripcion &&
-      inputValues.precioUnitario
+      !isNaN(inputValues.cantidad) &&
+      !isNaN(inputValues.precioUnitario) &&
+      inputValues.descripcion.trim() !== ""
     ) {
       const newProduct = {
-        cantidad: inputValues.cantidad,
+        cantidad: parseFloat(inputValues.cantidad).toFixed(2),
         descripcion: inputValues.descripcion,
-        precioUnitario: inputValues.precioUnitario,
-        total: inputValues.cantidad * inputValues.precioUnitario,
+        precioUnitario: parseFloat(inputValues.precioUnitario).toFixed(2),
+        total: (
+          parseFloat(inputValues.cantidad) *
+          parseFloat(inputValues.precioUnitario)
+        ).toFixed(2),
       };
 
       setProducts([...products, newProduct]);
@@ -69,15 +89,21 @@ const ProductList = () => {
       });
       toast.success("Producto Añadido.");
     } else {
-      toast.warn("Por favor, complete todos los campos.");
+      toast.warn(
+        "Por favor, complete todos los campos y asegúrese de que las cantidades sean números válidos."
+      );
     }
   };
 
   const handleSaveRecord = async () => {
     // Verificar si el título de la lista ya existe
-    const existingRecord = records.find(record => record.title === tableTitle);
+    const existingRecord = records.find(
+      (record) => record.title === tableTitle
+    );
     if (existingRecord) {
-      toast.warn("La lista ya existe. Por favor, elige un título diferente o da click en el boton actualizar para actualizar la lista.");
+      toast.warn(
+        "La lista ya existe. Por favor, elige un título diferente o da click en el boton actualizar para actualizar la lista."
+      );
       return;
     }
 
@@ -103,7 +129,8 @@ const ProductList = () => {
         products: products,
       };
 
-      db.records.update(selectedRecord.id, updatedRecord)
+      db.records
+        .update(selectedRecord.id, updatedRecord)
         .then(() => {
           toast.success("Lista Actualizada.");
           // Recargar registros desde IndexedDB al estado
@@ -111,10 +138,14 @@ const ProductList = () => {
         })
         .catch((error) => {
           console.error("Error al actualizar lista:", error);
-          toast.error("Error al actualizar lista. Consulta la consola para más detalles.");
+          toast.error(
+            "Error al actualizar lista. Consulta la consola para más detalles."
+          );
         });
     } else {
-      toast.warn("Por favor, selecciona una lista antes de intentar actualizar.");
+      toast.warn(
+        "Por favor, selecciona una lista antes de intentar actualizar."
+      );
     }
   };
 
@@ -127,7 +158,12 @@ const ProductList = () => {
   };
 
   const getTotalSum = () => {
-    return products.reduce((total, product) => total + product.total, 0);
+    return products.reduce((total, product) => {
+      // Utilizar parseInt para convertir la cantidad a número entero antes de la multiplicación
+      const cantidad = parseInt(product.cantidad, 10);
+      const subtotal = cantidad * parseFloat(product.precioUnitario);
+      return total + subtotal;
+    }, 0).toFixed(2);
   };
 
   const formatNumberWithCommas = (number) => {
@@ -183,7 +219,7 @@ const ProductList = () => {
         </select>
       </div>
       <div className="container">
-        <button onClick={handleLoadRecord} className="boton-cargar" >
+        <button onClick={handleLoadRecord} className="boton-cargar">
           <FontAwesomeIcon icon={faFileArrowDown}></FontAwesomeIcon> Cargar
           Lista
         </button>
@@ -201,13 +237,13 @@ const ProductList = () => {
           name="cantidad"
           placeholder="Cantidad"
           value={inputValues.cantidad}
-          onChange={handleInputChange}
+          onChange={handleCantidadChange}
         />
         <textarea
           placeholder="Descripción"
           name="descripcion"
           value={inputValues.descripcion}
-          onChange={handleInputChange}
+          onChange={handleDescripcionChange}
           rows={4} // Puedes ajustar el número de filas según tus necesidades
         />
         <input
@@ -215,11 +251,11 @@ const ProductList = () => {
           name="precioUnitario"
           placeholder="Precio Unitario"
           value={inputValues.precioUnitario}
-          onChange={handleInputChange}
+          onChange={handlePrecioUnitarioChange}
         />
       </div>
       <div className="container">
-        <button onClick={handleAddProduct} className="boton-cargar" >
+        <button onClick={handleAddProduct} className="boton-cargar">
           <FontAwesomeIcon icon={faCartPlus}></FontAwesomeIcon> Agregar Producto
         </button>
       </div>
@@ -243,15 +279,15 @@ const ProductList = () => {
           {products.map((product, index) => (
             <tr key={index}>
               <td> {index + 1}</td>
-              <td style={{textAlign:"center"}} >{product.cantidad}</td>
+              <td style={{ textAlign: "center" }}>{product.cantidad}</td>
               <td>{product.descripcion}</td>
-              <td>$ {product.precioUnitario}.00</td>
-              <td>$ {product.total}.00</td>
+              <td>$ {product.precioUnitario}</td>
+              <td>$ {product.total}</td>
             </tr>
           ))}
           <tr>
             <td colSpan={5} style={{ textAlign: "right", fontSize: "25px" }}>
-              Total: $ {formatNumberWithCommas(getTotalSum())}.00
+              Total: $ {formatNumberWithCommas(getTotalSum())}
             </td>
           </tr>
           {numPersons > 0 && showDividerRow && (
@@ -272,26 +308,25 @@ const ProductList = () => {
           placeholder="Número"
           onChange={handleNumPersonsChange}
         />
-        <button
-          className="boton-calcular"
-          onClick={handleCalculateSplit}
-        >
+        <button className="boton-calcular" onClick={handleCalculateSplit}>
           <FontAwesomeIcon icon={faCalculator}></FontAwesomeIcon> Calcular
           División
         </button>
       </div>
       <hr></hr>
       <div className="container-botones">
-        <button onClick={handleSaveRecord} className="boton-guardar" >
-          <FontAwesomeIcon icon={faSdCard}></FontAwesomeIcon> Guardar
-          Lista
+        <button onClick={handleSaveRecord} className="boton-guardar">
+          <FontAwesomeIcon icon={faSdCard}></FontAwesomeIcon> Guardar Lista
         </button>
         <button onClick={handleUpdateList} className="boton-actualizar">
           <FontAwesomeIcon icon={faRefresh}></FontAwesomeIcon> Actualizar Lista
         </button>
       </div>
       <div className="container">
-        <button onClick={() => capturarTabla(tablaRef.current)} className="boton-capturar" >
+        <button
+          onClick={() => capturarTabla(tablaRef.current)}
+          className="boton-capturar"
+        >
           <FontAwesomeIcon icon={faCamera}></FontAwesomeIcon> Capturar Lista
         </button>
       </div>

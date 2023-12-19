@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 import db from "../db";
 import "./EditarLista.css";
+import {toast} from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 const EditarLista = () => {
   const [registros, setRegistros] = useState([]);
@@ -39,8 +41,8 @@ const EditarLista = () => {
       productosActualizados[index][campo] = valor;
       // Recalcular el total al editar la cantidad o el precio unitario
       productosActualizados[index].total =
-        productosActualizados[index].cantidad *
-        productosActualizados[index].precioUnitario;
+        (productosActualizados[index].cantidad *
+        productosActualizados[index].precioUnitario).toFixed(2);
       return {
         ...registroPrevio,
         products: productosActualizados,
@@ -65,7 +67,7 @@ const EditarLista = () => {
 
       await db.records.update(registroSeleccionado.id, registroEditado);
       cargarRegistrosDesdeDB();
-      alert("Registro actualizado exitosamente.");
+      toast.success("Registro actualizado exitosamente.");
     }
   };
 
@@ -151,7 +153,7 @@ const EditarLista = () => {
                         }
                       />
                     </td>
-                    <td>$ {producto.total}.00</td>
+                    <td>$ {producto.total}</td>
                     <td>
                       <button
                         onClick={() => manejarEliminarProducto(index)}

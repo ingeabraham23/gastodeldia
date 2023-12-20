@@ -71,7 +71,7 @@ const ProductList = () => {
       inputValues.descripcion.trim() !== ""
     ) {
       const newProduct = {
-        cantidad: parseFloat(inputValues.cantidad).toFixed(2),
+        cantidad: parseInt(inputValues.cantidad, 10),
         descripcion: inputValues.descripcion,
         precioUnitario: parseFloat(inputValues.precioUnitario).toFixed(2),
         total: (

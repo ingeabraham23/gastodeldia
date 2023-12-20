@@ -166,6 +166,10 @@ const Operaciones = () => {
     });
   }
 
+  const formatNumberWithCommas = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
   return (
     <div>
       <div className="container">
@@ -231,6 +235,9 @@ const Operaciones = () => {
       <table ref={tablaRef}>
         <thead>
           <tr>
+            <th colSpan={3} style={{textAlign: "center"}}>{tituloOperacion}</th>
+          </tr>
+          <tr>
             <th>#</th>
             <th>Descripción</th>
             <th>Cantidad</th>
@@ -244,15 +251,14 @@ const Operaciones = () => {
             }}>
               <td>{index + 1}</td>
               <td>{operacion.descripcion}</td>
-              <td>${operacion.cantidad}</td>
+              <td>$ {formatNumberWithCommas(operacion.cantidad.toFixed(2))}</td>
             </tr>
           ))}
 
           <tr>
-            <td colSpan={2} style={{ textAlign: "right", fontSize: "25px" }}>
-              Total:
+            <td colSpan={3} style={{ textAlign: "right", fontSize: "30px", backgroundColor: " #00AEFF" }}>
+              Total: $ {formatNumberWithCommas( total.toFixed(2))}
             </td>
-            <td>${total.toFixed(2)}</td>
           </tr>
         </tbody>
       </table>

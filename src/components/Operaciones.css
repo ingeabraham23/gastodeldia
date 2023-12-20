@@ -62,4 +62,16 @@
         justify-content: space-evenly;
     }
 
+    td:nth-child(1) {
+      /* Estilos para la segunda columna */
+      width: 10%;
+    }
+    td:nth-child(2) {
+      /* Estilos para la segunda columna */
+      width: 70%;
+    }
+    td:nth-child(3) {
+      /* Estilos para la segunda columna */
+      width: 20%;
+    }
   }

@@ -260,7 +260,7 @@ const ProductList = () => {
         </button>
       </div>
       <hr></hr>
-      <table ref={tablaRef}>
+      <table ref={tablaRef} className="tabla-productos">
         <thead>
           <tr>
             <th colSpan={5} style={{ textAlign: "center" }}>
@@ -271,7 +271,7 @@ const ProductList = () => {
             <th></th>
             <th>Cant.</th>
             <th>Descripción</th>
-            <th>Precio U.</th>
+            <th>Precio</th>
             <th>Total</th>
           </tr>
         </thead>
@@ -286,7 +286,7 @@ const ProductList = () => {
             </tr>
           ))}
           <tr>
-            <td colSpan={5} style={{ textAlign: "right", fontSize: "25px" }}>
+            <td colSpan={5} style={{ textAlign: "right", fontSize: "25px", backgroundColor: "#00AEFF"}}>
               Total: $ {formatNumberWithCommas(getTotalSum())}
             </td>
           </tr>

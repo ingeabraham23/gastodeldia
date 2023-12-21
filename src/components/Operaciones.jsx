@@ -232,7 +232,7 @@ const Operaciones = () => {
         </div>
       </div>
       <hr />
-      <table ref={tablaRef}>
+      <table ref={tablaRef} className="tabla-operaciones">
         <thead>
           <tr>
             <th colSpan={3} style={{textAlign: "center"}}>{tituloOperacion}</th>
@@ -256,7 +256,7 @@ const Operaciones = () => {
           ))}
 
           <tr>
-            <td colSpan={3} style={{ textAlign: "right", fontSize: "30px", backgroundColor: " #00AEFF" }}>
+            <td colSpan={3} style={{ textAlign: "right", fontSize: "30px", backgroundColor: "#00AEFF" }}>
               Total: $ {formatNumberWithCommas( total.toFixed(2))}
             </td>
           </tr>

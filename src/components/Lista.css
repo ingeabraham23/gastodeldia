@@ -160,7 +160,7 @@
     /* Estilos para la primera columna */
     width: 5%;
     font-size: 10px;
-    background-color: rgb(138, 138, 138);
+    background-color: rgb(170, 170, 170);
   }
   
   .tabla-productos td:nth-child(2) {
@@ -204,5 +204,10 @@
   .lista-personas td:nth-child(3) {
     /* Estilos para la segunda columna */
     width: 25px;
+  }
+  .comentarios{
+    padding: 2px;
+    text-align: center;
+    letter-spacing: 2px;
   }
 }

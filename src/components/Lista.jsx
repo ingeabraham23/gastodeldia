@@ -16,9 +16,11 @@ import db from "../db";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EditarLista from "./EditarLista";
+import { obtenerFechaFormateada } from "./fecha.js";
 
 const ProductList = () => {
   const [tableTitle, setTableTitle] = useState("");
+  const [tableComentarios, setTableComentarios] = useState("");
   const [products, setProducts] = useState([]);
   const [inputValues, setInputValues] = useState({
     cantidad: "",
@@ -46,8 +48,7 @@ const ProductList = () => {
 
     // Verificar si el valor ingresado es un número entero antes de actualizar el estado
 
-      setInputValues({ ...inputValues, cantidad: value });
-
+    setInputValues({ ...inputValues, cantidad: value });
   };
 
   const handleDescripcionChange = (e) => {
@@ -60,7 +61,7 @@ const ProductList = () => {
 
     // Verificar si el valor ingresado es un número antes de actualizar el estado
 
-      setInputValues({ ...inputValues, precioUnitario: value });
+    setInputValues({ ...inputValues, precioUnitario: value });
   };
 
   const handleAddProduct = () => {
@@ -96,6 +97,11 @@ const ProductList = () => {
   };
 
   const handleSaveRecord = async () => {
+    // Verificar si el título está vacío
+    if (tableTitle.trim() === "") {
+      toast.warn("Por favor, escribe un título para la lista.");
+      return;
+    }
     // Verificar si el título de la lista ya existe
     const existingRecord = records.find(
       (record) => record.title === tableTitle
@@ -109,6 +115,7 @@ const ProductList = () => {
 
     // Guardar registro en IndexedDB
     const record = {
+      comentarios: tableComentarios,
       title: tableTitle,
       products: products,
     };
@@ -116,7 +123,19 @@ const ProductList = () => {
     await db.records.add(record);
     // Recargar registros desde IndexedDB al estado
     toast.success("Lista Guardada.");
+    setTableComentarios("");
+    setTableTitle("");
+    setProducts([]);
     loadRecordsFromDB();
+    // Restablecer el valor del select a su opción predeterminada
+    if (selectRef.current) {
+      selectRef.current.value = "";
+    }
+    // Desplazar la página hacia arriba
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Opcional, para un desplazamiento suave
+    });
   };
 
   const handleUpdateList = () => {
@@ -125,6 +144,7 @@ const ProductList = () => {
       // Actualizar el registro en IndexedDB con los cambios
       const updatedRecord = {
         ...selectedRecord,
+        comentarios: tableComentarios,
         title: tableTitle,
         products: products,
       };
@@ -142,6 +162,19 @@ const ProductList = () => {
             "Error al actualizar lista. Consulta la consola para más detalles."
           );
         });
+      setTableComentarios("");
+      setTableTitle("");
+      setProducts([]);
+      loadRecordsFromDB();
+      // Restablecer el valor del select a su opción predeterminada
+    if (selectRef.current) {
+      selectRef.current.value = "";
+    }
+      // Desplazar la página hacia arriba
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth", // Opcional, para un desplazamiento suave
+      });
     } else {
       toast.warn(
         "Por favor, selecciona una lista antes de intentar actualizar."
@@ -152,18 +185,21 @@ const ProductList = () => {
   const handleLoadRecord = () => {
     // Cargar productos del registro seleccionado
     if (selectedRecord) {
+      setTableComentarios(selectedRecord.comentarios);
       setTableTitle(selectedRecord.title);
       setProducts(selectedRecord.products);
     }
   };
 
   const getTotalSum = () => {
-    return products.reduce((total, product) => {
-      // Utilizar parseInt para convertir la cantidad a número entero antes de la multiplicación
-      const cantidad = parseInt(product.cantidad, 10);
-      const subtotal = cantidad * parseFloat(product.precioUnitario);
-      return total + subtotal;
-    }, 0).toFixed(2);
+    return products
+      .reduce((total, product) => {
+        // Utilizar parseInt para convertir la cantidad a número entero antes de la multiplicación
+        const cantidad = parseInt(product.cantidad, 10);
+        const subtotal = cantidad * parseFloat(product.precioUnitario);
+        return total + subtotal;
+      }, 0)
+      .toFixed(2);
   };
 
   const formatNumberWithCommas = (number) => {
@@ -176,6 +212,8 @@ const ProductList = () => {
   };
 
   const tablaRef = useRef(null);
+  // Crea una referencia para el elemento select
+  const selectRef = useRef(null);
 
   function capturarTabla(tabla) {
     html2canvas(tabla).then(function (canvas) {
@@ -199,11 +237,13 @@ const ProductList = () => {
     }
   };
 
+  const fechaFormateada = obtenerFechaFormateada();
+
   return (
     <div>
       <br></br>
       <div className="container">
-        <select
+        <select ref={selectRef} id="tuSelectId"
           onChange={(e) =>
             setSelectedRecord(
               records.find((record) => record.title === e.target.value)
@@ -268,6 +308,11 @@ const ProductList = () => {
             </th>
           </tr>
           <tr>
+            <th colSpan={5} style={{ textAlign: "center" }}>
+              {fechaFormateada}
+            </th>
+          </tr>
+          <tr>
             <th></th>
             <th>Cant.</th>
             <th>Descripción</th>
@@ -286,7 +331,14 @@ const ProductList = () => {
             </tr>
           ))}
           <tr>
-            <td colSpan={5} style={{ textAlign: "right", fontSize: "25px", backgroundColor: "#00AEFF"}}>
+            <td
+              colSpan={5}
+              style={{
+                textAlign: "right",
+                fontSize: "25px",
+                backgroundColor: "#00AEFF",
+              }}
+            >
               Total: $ {formatNumberWithCommas(getTotalSum())}
             </td>
           </tr>
@@ -298,6 +350,15 @@ const ProductList = () => {
             </tr>
           )}
         </tbody>
+        {tableComentarios !== "" && (
+          <tfoot>
+            <tr>
+              <td colSpan={5} className="comentarios">
+                {tableComentarios}
+              </td>
+            </tr>
+          </tfoot>
+        )}
       </table>
       <div className="contenedor-dividir">
         <label>Entre: </label>
@@ -329,6 +390,15 @@ const ProductList = () => {
         >
           <FontAwesomeIcon icon={faCamera}></FontAwesomeIcon> Capturar Lista
         </button>
+      </div>
+      <div className="container">
+        <textarea
+          name="comentarios"
+          placeholder="Comentarios"
+          value={tableComentarios}
+          onChange={(e) => setTableComentarios(e.target.value)}
+          rows={4}
+        />
       </div>
       <EditarLista></EditarLista>
     </div>

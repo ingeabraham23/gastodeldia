@@ -8,6 +8,11 @@ import "react-toastify/dist/ReactToastify.css"
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />
-    <ToastContainer/>
+    <ToastContainer
+    autoClose={1000} // milisegundos
+    closeOnClick
+    pauseOnFocusLoss
+    theme="colored"
+    />
   </React.StrictMode>,
 )

@@ -11,10 +11,13 @@ const DeleteRecord = () => {
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [listas, setListas] = useState([]);
   const [selectedLista, setSelectedLista] = useState();
+  const [operaciones, setOperaciones] = useState([]);
+  const [selectedOperacion, setSelectedOperacion] = useState();
 
   useEffect(() => {
     loadRecordsFromDB();
     loadListasFromDB();
+    loadOperacionesFromDB();
   }, []);
 
   const loadRecordsFromDB = async () => {
@@ -25,6 +28,11 @@ const DeleteRecord = () => {
   const loadListasFromDB = async () => {
     const listasFromDB = await db.listas.toArray();
     setListas(listasFromDB);
+  };
+
+  const loadOperacionesFromDB = async () => {
+    const operacionesFromDB = await db.operaciones.toArray();
+    setOperaciones(operacionesFromDB);
   };
 
   const handleDeleteRecord = async () => {
@@ -43,6 +51,16 @@ const DeleteRecord = () => {
       toast.warn("La lista de Personas se ha Eliminado")
       // Recargar la lista de registros desde la base de datos
       loadListasFromDB();
+    }
+  };
+
+  const handleDeleteOperacion = async () => {
+    if (selectedOperacion) {
+      // Eliminar el registro de la base de datos
+      await db.operaciones.delete(selectedOperacion.id);
+      toast.warn("La lista de Operaciones se ha Eliminado")
+      // Recargar la lista de registros desde la base de datos
+      loadOperacionesFromDB();
     }
   };
 
@@ -85,6 +103,24 @@ const DeleteRecord = () => {
           ))}
         </select>
         <button className="boton-eliminar" onClick={handleDeleteLista}>Eliminar Lista</button>
+      </div>
+      <h2>Eliminar Lista de Operaciones.</h2>
+      <div className="container">
+        <select
+          onChange={(e) =>
+            setSelectedOperacion(
+              operaciones.find((operacion) => operacion.titulo === e.target.value)
+            )
+          }
+        >
+          <option value="">Seleccionar Lista.</option>
+          {operaciones.map((operacion) => (
+            <option key={operacion.id} value={operacion.titulo}>
+              {operacion.titulo}
+            </option>
+          ))}
+        </select>
+        <button className="boton-eliminar" onClick={handleDeleteOperacion}>Eliminar Operacion</button>
       </div>
     </div>
     </div>

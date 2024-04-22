@@ -15,9 +15,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EditarPersonas from "./EditarPersonas";
+import { obtenerFechaFormateada } from "./fecha.js";
 
 const PersonList = () => {
   const [tableTitle, setTableTitle] = useState("");
+  const [tableComentarios, setTableComentarios] = useState("");
   const [persons, setPersons] = useState([]);
   const [inputValues, setInputValues] = useState({
     nombre: "",
@@ -58,6 +60,11 @@ const PersonList = () => {
   };
 
   const handleSaveLista = async () => {
+    // Verificar si el título está vacío
+    if (tableTitle.trim() === "") {
+      toast.warn("Por favor, escribe un título para la lista.");
+      return;
+    }
     // Verificar si el título de la lista ya existe
     const existingLista = listas.find((lista) => lista.title === tableTitle);
     if (existingLista) {
@@ -68,6 +75,7 @@ const PersonList = () => {
     try {
       // Guardar registro en IndexedDB
       const lista = {
+        comentarios: tableComentarios,
         title: tableTitle,
         persons: persons,
       };
@@ -88,6 +96,7 @@ const PersonList = () => {
       // Actualizar la lista en IndexedDB con los cambios
       const updatedLista = {
         ...selectedLista,
+        comentarios: tableComentarios,
         title: tableTitle,
         persons: persons,
       };
@@ -110,6 +119,7 @@ const PersonList = () => {
   const handleLoadLista = () => {
     // Cargar personas de la lista seleccionada
     if (selectedLista) {
+      setTableComentarios(selectedLista.comentarios)
       setTableTitle(selectedLista.title);
       setPersons(selectedLista.persons);
     }
@@ -158,6 +168,8 @@ const PersonList = () => {
       toast.warn("Ingrese una cantidad válida para restar.");
     }
   };
+
+  const fechaFormateada = obtenerFechaFormateada();
 
   return (
     <div>
@@ -222,6 +234,11 @@ const PersonList = () => {
             </th>
           </tr>
           <tr>
+            <th colSpan={5} style={{ textAlign: "center" }}>
+              {fechaFormateada}
+            </th>
+          </tr>
+          <tr>
             <th></th>
             <th>Nombre</th>
             <th>Aporte</th>
@@ -255,6 +272,13 @@ const PersonList = () => {
             </>
           )}
         </tbody>
+        {tableComentarios !== "" &&(
+        <tfoot>
+          <tr>
+            <td colSpan={5} className="comentarios" >{tableComentarios}</td>
+          </tr>
+        </tfoot>
+        )}
       </table>
       <div className="container">
         <label>Restar: </label>
@@ -282,6 +306,15 @@ const PersonList = () => {
         <button onClick={() => capturarTabla(tablaRef.current)} className="boton-capturar" >
           <FontAwesomeIcon icon={faCamera}></FontAwesomeIcon> Capturar Lista
         </button>
+      </div>
+      <div className="container">
+        <textarea
+          name="comentarios"
+          placeholder="Comentarios"
+          value={tableComentarios}
+          onChange={(e) => setTableComentarios(e.target.value)}
+          rows={4}
+        />
       </div>
       <EditarPersonas></EditarPersonas>
     </div>

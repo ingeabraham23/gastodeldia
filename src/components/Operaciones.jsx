@@ -62,6 +62,7 @@ const Operaciones = () => {
       const nuevaOperacion = {
         descripcion,
         cantidad: cantidadOperacion,
+        total: total + cantidadOperacion,
       };
 
       setOperaciones([...operaciones, nuevaOperacion]);
@@ -235,7 +236,9 @@ const Operaciones = () => {
       <table ref={tablaRef} className="tabla-operaciones">
         <thead>
           <tr>
-            <th colSpan={3} style={{textAlign: "center"}}>{tituloOperacion}</th>
+            <th colSpan={3} style={{ textAlign: "center" }}>
+              {tituloOperacion}
+            </th>
           </tr>
           <tr>
             <th>#</th>
@@ -245,19 +248,38 @@ const Operaciones = () => {
         </thead>
         <tbody>
           {operaciones.map((operacion, index) => (
-            <tr key={index} style={{
-              backgroundColor: operacion.cantidad < 0 ? '#E54040' : 'white',
-              // Agrega otros estilos según sea necesario
-            }}>
-              <td>{index + 1}</td>
-              <td>{operacion.descripcion}</td>
-              <td>$ {formatNumberWithCommas(operacion.cantidad.toFixed(2))}</td>
-            </tr>
+            <>
+              <tr
+                key={index}
+                style={{
+                  backgroundColor: operacion.cantidad < 0 ? "#E54040" : "#A6FF00",
+                  // Agrega otros estilos según sea necesario
+                }}
+              >
+                <td>{index + 1}</td>
+                <td>{operacion.descripcion}</td>
+                <td>
+                  $ {formatNumberWithCommas(operacion.cantidad.toFixed(2))}
+                </td>
+              </tr>
+              <tr className="celda-total-parcial">
+                <td></td>
+                <td className="celda-total-parcial">Total parcial</td>
+                <td className="celda-total-parcial">$ {formatNumberWithCommas(operacion.total.toFixed(2))}</td>
+              </tr>
+            </>
           ))}
 
           <tr>
-            <td colSpan={3} style={{ textAlign: "right", fontSize: "30px", backgroundColor: "#00AEFF" }}>
-              Total: $ {formatNumberWithCommas( total.toFixed(2))}
+            <td
+              colSpan={3}
+              style={{
+                textAlign: "right",
+                fontSize: "30px",
+                backgroundColor: "#00AEFF",
+              }}
+            >
+              Total: $ {formatNumberWithCommas(total.toFixed(2))}
             </td>
           </tr>
         </tbody>

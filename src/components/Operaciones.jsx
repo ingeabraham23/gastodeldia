@@ -14,6 +14,8 @@ import db from "../db";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Operaciones.css";
+import EditarOperaciones from "./EditarOperaciones";
+import { obtenerFechaFormateada } from "./fecha.js";
 
 const Operaciones = () => {
   const [descripcion, setDescripcion] = useState("");
@@ -171,6 +173,8 @@ const Operaciones = () => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
+  const fechaFormateada = obtenerFechaFormateada();
+
   return (
     <div>
       <div className="container">
@@ -241,6 +245,11 @@ const Operaciones = () => {
             </th>
           </tr>
           <tr>
+            <th colSpan={3} style={{ textAlign: "center" }}>
+              {fechaFormateada}
+            </th>
+          </tr>
+          <tr>
             <th>#</th>
             <th>Descripción</th>
             <th>Cantidad</th>
@@ -300,6 +309,7 @@ const Operaciones = () => {
           </button>
         </div>
       </div>
+      <EditarOperaciones></EditarOperaciones>
     </div>
   );
 };

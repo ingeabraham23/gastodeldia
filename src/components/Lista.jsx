@@ -6,6 +6,7 @@ import {
   faCamera,
   faCartPlus,
   faFileArrowDown,
+  faFileDownload,
   faRefresh,
   faSdCard,
 } from "@fortawesome/free-solid-svg-icons";
@@ -33,6 +34,40 @@ const ProductList = () => {
   const [numPersons, setNumPersons] = useState("");
   const [totalDivided, setTotalDivided] = useState(0);
   const [showDividerRow, setShowDividerRow] = useState(false);
+
+  const [isReadyForInstall, setIsReadyForInstall] = React.useState(false);
+
+useEffect(() => {
+  window.addEventListener("beforeinstallprompt", (event) => {
+    // Evita que el mini-infobar aparezca en el móvil.
+    event.preventDefault();
+    console.log("👍", "beforeinstallprompt", event);
+    // Guarde el evento para que pueda activarse más tarde.
+    window.deferredPrompt = event;
+    // Elimine la clase 'oculta' del contenedor del botón de instalación.
+    setIsReadyForInstall(true);
+  });
+}, []);
+
+async function downloadApp() {
+  console.log("👍", "butInstall-clicked");
+  const promptEvent = window.deferredPrompt;
+  if (!promptEvent) {
+    // El mensaje diferido no está disponible.
+     console.log("Ups, no se guardó ningún evento de aviso en window");
+    return;
+  }
+  // Muestra el mensaje de instalación.
+  promptEvent.prompt();
+  // Registra el resultado
+  const result = await promptEvent.userChoice;
+  console.log("👍", "userChoice", result);
+  // Restablezca la variable de solicitud diferida, ya que
+  //Prompt() solo se puede llamar una vez.
+  window.deferredPrompt = null;
+  // Oculta el botón de instalación.
+  setIsReadyForInstall(false);
+}
 
   useEffect(() => {
     loadRecordsFromDB();
@@ -241,6 +276,9 @@ const ProductList = () => {
 
   return (
     <div>
+      {isReadyForInstall && (
+        <button className="button-app" onClick={downloadApp}>Instalar App <FontAwesomeIcon icon={faFileDownload} /> </button>
+      )}
       <br></br>
       <div className="container">
         <select ref={selectRef} id="tuSelectId"

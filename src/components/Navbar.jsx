@@ -4,12 +4,14 @@ import {
   faCalculator,
     faClipboardList,
     faDeleteLeft,
+    faListOl,
     faPeopleGroup,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const navigationItems = [
   { path: '/', icon: faClipboardList, label: 'Productos' },
+  { path: '/simple', icon: faListOl, label: 'simple' },
   { path: '/listapersonas', icon: faPeopleGroup, label: 'personas' },
   { path: '/operaciones', icon: faCalculator, label: 'operaciones' },
   { path: '/eliminar', icon: faDeleteLeft, label: 'eliminar' },

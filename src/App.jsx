@@ -7,6 +7,7 @@ import './App.css'
 import PersonList from './components/ListaDePersonas'
 import Navbar from "./components/Navbar";
 import Operaciones from './components/Operaciones';
+import Simple from './components/ListaSimple';
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" element={<ProductList />} />
+            <Route path="/simple" element={<Simple />} />
             <Route path="/listapersonas" element={<PersonList />} />
             <Route path="/operaciones" element={<Operaciones />} />
             <Route path="/eliminar" element={<DeleteRecord />} />

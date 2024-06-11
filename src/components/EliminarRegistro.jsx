@@ -13,11 +13,14 @@ const DeleteRecord = () => {
   const [selectedLista, setSelectedLista] = useState();
   const [operaciones, setOperaciones] = useState([]);
   const [selectedOperacion, setSelectedOperacion] = useState();
+  const [simples, setSimples] = useState([]);
+  const [selectedSimple, setSelectedSimple] = useState();
 
   useEffect(() => {
     loadRecordsFromDB();
     loadListasFromDB();
     loadOperacionesFromDB();
+    loadSimplesFromDB();
   }, []);
 
   const loadRecordsFromDB = async () => {
@@ -33,6 +36,11 @@ const DeleteRecord = () => {
   const loadOperacionesFromDB = async () => {
     const operacionesFromDB = await db.operaciones.toArray();
     setOperaciones(operacionesFromDB);
+  };
+
+  const loadSimplesFromDB = async () => {
+    const simplesFromDB = await db.simple.toArray();
+    setSimples(simplesFromDB);
   };
 
   const handleDeleteRecord = async () => {
@@ -64,6 +72,16 @@ const DeleteRecord = () => {
     }
   };
 
+  const handleDeleteSimple = async () => {
+    if (selectedSimple) {
+      // Eliminar el registro de la base de datos
+      await db.simple.delete(selectedSimple.id);
+      toast.warn("La lista Simple se ha Eliminado")
+      // Recargar la lista de registros desde la base de datos
+      loadSimplesFromDB();
+    }
+  };
+
   return (
     <div>
       <h2>Eliminar Lista de Productos.</h2>
@@ -83,6 +101,25 @@ const DeleteRecord = () => {
           ))}
         </select>
         <button className="boton-eliminar" onClick={handleDeleteRecord}>Eliminar Lista</button>
+      </div>
+      <hr></hr>
+      <h2>Eliminar Lista Simple.</h2>
+      <div className="container">
+        <select
+          onChange={(e) =>
+            setSelectedSimple(
+              simples.find((simple) => simple.title === e.target.value)
+            )
+          }
+        >
+          <option value="">Seleccionar Lista.</option>
+          {simples.map((simple) => (
+            <option key={simple.id} value={simple.title}>
+              {simple.title}
+            </option>
+          ))}
+        </select>
+        <button className="boton-eliminar" onClick={handleDeleteSimple}>Eliminar Lista</button>
       </div>
       <hr></hr>
       <div>

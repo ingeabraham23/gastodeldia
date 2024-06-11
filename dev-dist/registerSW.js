@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/gastodeldia/dev-sw.js?dev-sw', { scope: '/gastodeldia/', type: 'classic' })
